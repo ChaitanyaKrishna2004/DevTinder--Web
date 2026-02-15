@@ -1,0 +1,2 @@
+- React Router -> Outlated
+- css - fixed bottom - 0
