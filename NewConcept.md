@@ -1,2 +1,4 @@
 - React Router -> Outlated
 - css - fixed bottom - 0
+- CORS
+- If u are not on the same domain, If u are not using https the browser does not allow cookies to be set Inside out browser add the config in the cors.
