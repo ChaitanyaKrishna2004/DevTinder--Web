@@ -1,13 +1,15 @@
 import axios from 'axios'
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router'
 import { BASE_URL } from '../utils/constants'
+import { removeUser } from '../utils/userSlice'
 
 
 const NavBar = () => {
   const navigate = useNavigate();
   const user = useSelector((store) => store.user);
+  const dispatch = useDispatch();
   const Logouthandler = async () => {
     try {
       const res = await axios({
@@ -17,6 +19,7 @@ const NavBar = () => {
       });
       // console.log(res.data);
       if (res.data === "User Successfully Logout") {
+        dispatch(removeUser());
         navigate("/login");
       }
     }
