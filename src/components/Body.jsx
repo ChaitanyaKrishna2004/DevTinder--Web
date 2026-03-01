@@ -13,12 +13,10 @@ const Body = () => {
   const user = useSelector((store) => store.user);
   const navigate = useNavigate();
   const fetchUser = async () => {
-    console.log(user);
     if (user) {
       return;
     }
     try {
-      console.log("enter the axios")
       const res = await axios.get(BASE_URL + '/profile/view', {
         withCredentials: true
       })
@@ -26,10 +24,9 @@ const Body = () => {
     }
     catch (error) {
       if (error.status === 401) {
-        console.log("enter to the error status 401")
+        // console.log("enter to the error status 401")
         navigate("/login");
       }
-      console.error(error);
     }
   }
 

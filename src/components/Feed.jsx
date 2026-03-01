@@ -4,12 +4,10 @@ import { BASE_URL } from '../utils/constants'
 import { useDispatch, useSelector } from 'react-redux'
 import { addfeed } from '../utils/feedSlice.js'
 import Card from '../utils/card.jsx'
-import { Outlet } from 'react-router'
 
 const Feed = () => {
     const dispatch = useDispatch();
     const feed = useSelector((store) => store.feed);
-    console.log(feed);
     const fechfeed = async () => {
         try {
             const res = await axios({
@@ -18,7 +16,6 @@ const Feed = () => {
                 withCredentials: true,
             })
             dispatch(addfeed(res.data));
-            // console.log(res.data);
         }
         catch (error) {
             console.error(error);
@@ -31,7 +28,10 @@ const Feed = () => {
 
     return (
         <div>
-            <Card feed={feed} />
+            {
+                feed &&
+                <Card user={feed[0]} />
+            }
         </div>
     )
 }
