@@ -12,6 +12,7 @@ const Body = () => {
   const dispatch = useDispatch();
   const user = useSelector((store) => store.user);
   const navigate = useNavigate();
+  //user data
   const fetchUser = async () => {
     if (user) {
       return;
@@ -24,7 +25,6 @@ const Body = () => {
     }
     catch (error) {
       if (error.status === 401) {
-        // console.log("enter to the error status 401")
         navigate("/login");
       }
     }
@@ -32,7 +32,7 @@ const Body = () => {
 
   useEffect(() => {
     fetchUser();
-  }, []);
+  }, []); 
 
   return (
     <div>
