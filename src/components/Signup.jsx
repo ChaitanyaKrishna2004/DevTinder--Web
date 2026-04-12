@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { BASE_URL } from '../utils/constants';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { useDispatch } from 'react-redux';
 import { addUser } from '../utils/userSlice';
 import { SuccessAlert, ErrorAlert } from '../utils/Alert.jsx'
@@ -108,6 +108,9 @@ const Signup = () => {
                         <span className="validator-hint hidden">Required</span>
                     </label>
                     <button className="btn btn-neutral mt-4" type="submit">Signup</button>
+                    <div>
+                        <Link to='/login' className="link link-info">Login</Link>
+                    </div>
                 </form>
             </div >
         </>

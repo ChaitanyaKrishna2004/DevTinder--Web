@@ -35,7 +35,7 @@ const Body = () => {
   }
 
   useEffect(() => {
-    if (location.pathname !== '/signup') {
+    if (location.pathname !== '/signup' && location.pathname !== '/login') {
       fetchUser();
     }
   }, []);

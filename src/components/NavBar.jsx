@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { Link, useNavigate } from 'react-router'
 import { BASE_URL } from '../utils/constants'
@@ -7,9 +7,14 @@ import { removeUser } from '../utils/userSlice'
 
 
 const NavBar = () => {
+  const [them, setTheme] = useState(() => {
+    return localStorage.getItem("theme") || "light";
+  });
+
   const navigate = useNavigate();
   const user = useSelector((store) => store.user);
   const dispatch = useDispatch();
+
   const Logouthandler = async () => {
     try {
       const res = await axios({
@@ -26,6 +31,16 @@ const NavBar = () => {
       console.log(error);
     }
   }
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", them);
+    localStorage.setItem("theme", them);
+  }, [them]);
+
+  const toggleThem = (e) => {
+    setTheme(e.target.checked ? "dark" : "light");
+  }
+
   return (
     <div className="navbar bg-base-300 shadow-sm">
       <div className="flex-1">
@@ -63,10 +78,7 @@ const NavBar = () => {
         </div>
       }
       <label className="swap swap-rotate">
-        {/* this hidden checkbox controls the state */}
-        <input type="checkbox" className="theme-controller" value="dark" />
-
-        {/* sun icon */}
+        <input type="checkbox" className="theme-controller" checked={them === "dark"} onChange={toggleThem} />
         <svg
           className="swap-off h-10 w-10 fill-current"
           xmlns="http://www.w3.org/2000/svg"
