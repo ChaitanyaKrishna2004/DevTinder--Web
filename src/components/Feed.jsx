@@ -27,12 +27,11 @@ const Feed = () => {
     }, []);
 
     return (
-        <div>
-            {
-                feed &&
+        feed && (
+            <div>
                 <Card user={feed[0]} />
-            }
-        </div>
+            </div>
+        )
     )
 }
 

@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { addUser } from '../utils/userSlice';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import { BASE_URL } from '../utils/constants';
 
 const Login = () => {
@@ -62,6 +62,9 @@ const Login = () => {
           </div>
           <div className="card-actions justify-center m-3">
             <button className="btn btn-primary" onClick={handlelogin}>Login</button>
+          </div>
+          <div>
+            <Link to='/signup' className="link link-info">Signup</Link>
           </div>
         </div>
       </div>
