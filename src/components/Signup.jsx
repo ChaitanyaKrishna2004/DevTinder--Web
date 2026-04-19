@@ -7,10 +7,10 @@ import { addUser } from '../utils/userSlice';
 import { SuccessAlert, ErrorAlert } from '../utils/Alert.jsx'
 
 const Signup = () => {
-    const [FisrtName, setFirstName] = useState('Virat');
-    const [LastName, setLastName] = useState('Kohli');
-    const [Email, setEmail] = useState('Virat@gmail.com');
-    const [Password, setPassword] = useState('Virat@123');
+    const [FisrtName, setFirstName] = useState('');
+    const [LastName, setLastName] = useState('');
+    const [Email, setEmail] = useState('');
+    const [Password, setPassword] = useState('');
     const [SuccessAlertMsg, setSuccessAlertMsg] = useState(null);
     const [ErrorAlertMsg, setErrorAlertMsg] = useState(null);
 
