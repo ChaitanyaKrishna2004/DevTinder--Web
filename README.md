@@ -81,13 +81,16 @@ Body
     server_name 16.171.208.239; port
 
     location /api/ {
-        proxy_pass http://localhost:7777/ # Pass the request to the Node.js app
+        proxy_pass http://localhost:7000/ # Pass the request to the Node.js app
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
     }
+
+Custom domain -   https://devtinderr.me/login    
+
 
 # Screen Shots
 
