@@ -89,3 +89,12 @@ Body
         proxy_cache_bypass $http_upgrade;
     }
 
+# Screen Shots
+
+<img width="2470" height="1318" alt="image" src="https://github.com/user-attachments/assets/bf50d7d5-f8c9-4524-b72f-9b5d8d27aa27" />
+
+<img width="2464" height="1320" alt="image" src="https://github.com/user-attachments/assets/bd517ac2-e0ac-4938-8920-6490afcd8383" />
+
+<img width="2452" height="1300" alt="image" src="https://github.com/user-attachments/assets/5c66c621-38cd-47ba-ab45-7598ee0be7a1" />
+
+<img width="2484" height="1313" alt="image" src="https://github.com/user-attachments/assets/b1f6bf3b-75d8-4ee5-8362-8fca1fe84499" />
