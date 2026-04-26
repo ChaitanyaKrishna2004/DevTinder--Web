@@ -69,19 +69,19 @@ Body
 
 # Ngxinx config:
 
-    Frontend = http://43.204.96.49/
-    Backend = http://43.204.96.49:7000/
+    Frontend = http://16.171.208.239/
+    Backend = http://16.171.208.239/api/
 
-    Domain name = devtinder.com = 43.204.96.49
+    Domain name = devtinder.com = 16.171.208.239
     Frontend = devtinder.com
     Backend = devtinder.com:7000 = devtinder.com/api
 
     nginx config :
 
-    server_name 43.284.96.49; port
+    server_name 16.171.208.239; port
 
     location /api/ {
-        proxy_pass http://localhost:7000/ # Pass the request to the Node.js app
+        proxy_pass http://localhost:7777/ # Pass the request to the Node.js app
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection 'upgrade';
