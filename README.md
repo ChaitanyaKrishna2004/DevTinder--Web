@@ -88,10 +88,7 @@ Body
         proxy_set_header Host $host;
         proxy_cache_bypass $http_upgrade;
     }
-
-Custom domain -   https://devtinderr.me/login    
-
-
+    
 # Screen Shots
 
 <img width="2470" height="1318" alt="image" src="https://github.com/user-attachments/assets/bf50d7d5-f8c9-4524-b72f-9b5d8d27aa27" />
@@ -101,3 +98,30 @@ Custom domain -   https://devtinderr.me/login
 <img width="2452" height="1300" alt="image" src="https://github.com/user-attachments/assets/5c66c621-38cd-47ba-ab45-7598ee0be7a1" />
 
 <img width="2484" height="1313" alt="image" src="https://github.com/user-attachments/assets/b1f6bf3b-75d8-4ee5-8362-8fca1fe84499" />
+
+
+# Addding a custom Domain name
+
+- purchased domain name from godaddy
+- signup on cloudflare & add a new domain name
+- change the nameservers on godaddy and point it to cloudflare
+- wait for sometime till your nameservers are updated ~15 minutes
+- DNS record: A devtinder.in 43.204.96.49
+- Enable SSL for website
+
+# Sending Emails via SES
+
+- Create a IAM user
+- Give Access to AmazonSESFullAccess
+- Amazon SES: Create an Identity
+- Verify your domain name
+- Verify an email address identity
+- Install AWS SDK - v3
+- Code Example https://github.com/awsdocs/aws-doc-sdk-examples/tree/main/javascriptv3/
+example_code/ses#code-examples
+- Setup SesClient
+- Access Credentials should be created in IAm under SecurityCredentials Tab
+- Add the credentials to the env file
+- Write code for SESClient
+- Write code for Sending email address
+- Make the email dynamic by passing more params to the run function
