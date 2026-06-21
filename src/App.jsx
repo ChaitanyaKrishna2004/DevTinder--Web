@@ -8,9 +8,9 @@ import Feed from "./components/Feed.jsx";
 import Connection from "./components/Connection.jsx";
 import Request from "./components/Request.jsx";
 import Signup from "./components/Signup.jsx";
+import Payment from "./components/Payment.jsx";
 
 function App() {
-
   return (
     <div>
       <Provider store={appStore}>
@@ -23,12 +23,13 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/connections" element={<Connection />} />
               <Route path="/requests" element={<Request />} />
+              <Route path="/payment" element={<Payment />} />
             </Route>
           </Routes>
         </BrowserRouter>
       </Provider>
-    </div >
-  )
+    </div>
+  );
 }
 
-export default App
+export default App;
