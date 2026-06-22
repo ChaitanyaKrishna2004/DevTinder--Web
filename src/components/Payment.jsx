@@ -1,23 +1,39 @@
 import axios from "axios";
 import React from "react";
+import { BASE_URL } from "../utils/constants";
 
 const Payment = () => {
-  const handleSubscribe = (plan) => {
-    const order = await axios ({
+  const handleSubscribe = async (plan) => {
+    const order = await axios({
       method: "post",
-      url: "http://localhost:8080/payment/create-order",
+      url: BASE_URL + "/payment/create",
       data: {
-        plan: plan
+        plan: plan,
       },
       withCredentials: true,
     });
 
-    const {amount, currency, notes} = order.data;
+    const { paymentId, amount, currency, notes } = order.data.data;
+    const { key_id } = order.data;
 
     const options = {
-      key:
-    }
+      key: key_id,
+      amount: amount * 100,
+      currency: currency,
+      name: "DevTinder",
+      description: "Connect to other developers and share your projects",
+      order_id: paymentId,
+      prefill: {
+        name: notes.name,
+        email: notes.email,
+      },
+      theme: {
+        color: "#3513e0",
+      },
+    };
 
+    const rzp = new window.Razorpay(options);
+    rzp.open();
   };
   return (
     <div className="flex flex-col items-center gap-6 py-12">
