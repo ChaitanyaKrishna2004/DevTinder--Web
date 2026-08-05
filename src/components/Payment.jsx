@@ -7,7 +7,7 @@ const Payment = () => {
   const handleSubscribe = async (plan) => {
     const order = await axios({
       method: "post",
-      url: BASE_URL + "/payment/create",
+      url: BASE_URL + "/api/payment/create",
       data: {
         plan: plan,
       },
@@ -19,7 +19,7 @@ const Payment = () => {
 
     const verifyPremiumUser = async () => {
       try {
-        const res = await axios.get(BASE_URL + "/payment/verify", {
+        const res = await axios.get(BASE_URL + "/api/payment/verify", {
           withCredentials: true,
         });
 
