@@ -1,55 +1,66 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { BASE_URL } from "../utils/constants";
 
 const Payment = () => {
   const [isPremiumUser, setIsPremiumUser] = useState(false);
-  const handleSubscribe = async (plan) => {
-    const order = await axios({
-      method: "post",
-      url: BASE_URL + "/api/payment/create",
-      data: {
-        plan: plan,
-      },
-      withCredentials: true,
-    });
 
-    const { paymentId, amount, currency, notes } = order.data.data;
-    const { key_id } = order.data;
+  const verifyPremiumUser = async () => {
+    try {
+      const res = await axios.get(BASE_URL + "/payment/verify", {
+        withCredentials: true,
+      });
 
-    const verifyPremiumUser = async () => {
-      try {
-        const res = await axios.get(BASE_URL + "/api/payment/verify", {
-          withCredentials: true,
-        });
-
-        if (res.data.success) {
-          setIsPremiumUser(true);
-        }
-      } catch (error) {
-        console.error("Error verifying premium user:", error);
+      if (res.data.isPremium || res.data.success) {
+        setIsPremiumUser(true);
       }
-    };
+    } catch (error) {
+      console.error("Error verifying premium user:", error);
+    }
+  };
 
-    const options = {
-      key: key_id,
-      amount: amount * 100,
-      currency: currency,
-      name: "DevTinder",
-      description: "Connect to other developers and share your projects",
-      order_id: paymentId,
-      handler: verifyPremiumUser,
-      prefill: {
-        name: notes.name,
-        email: notes.email,
-      },
-      theme: {
-        color: "#3513e0",
-      },
-    };
+  useEffect(() => {
+    verifyPremiumUser();
+  }, []);
 
-    const rzp = new window.Razorpay(options);
-    rzp.open();
+  const handleSubscribe = async (plan) => {
+    try {
+      const order = await axios({
+        method: "post",
+        url: BASE_URL + "/payment/create",
+        data: {
+          plan: plan,
+        },
+        withCredentials: true,
+      });
+
+      const { paymentId, amount, currency, notes } = order.data.data;
+      const { key_id } = order.data;
+
+      const options = {
+        key: key_id,
+        amount: amount * 100,
+        currency: currency,
+        name: "DevTinder",
+        description: "Connect to other developers and share your projects",
+        order_id: paymentId,
+        handler: async () => {
+          await verifyPremiumUser();
+        },
+        prefill: {
+          name: notes.name,
+          email: notes.email,
+        },
+        theme: {
+          color: "#3513e0",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.error("Payment initiation failed:", error);
+    }
   };
 
   return (
@@ -72,7 +83,7 @@ const Payment = () => {
             <div className="card w-96 bg-base-100 shadow-sm">
               <div className="card-body">
                 <div className="flex justify-between">
-                  <h2 className="text-3xl font-bold">Green</h2>
+                  <h2 className="text-3xl font-bold">Silver</h2>
                   <span className="text-xl">₹5,000/month</span>
                 </div>
                 <ul className="mt-6 flex flex-col gap-2 text-xs">
@@ -179,7 +190,7 @@ const Payment = () => {
                 </ul>
                 <div className="mt-6">
                   <button
-                    onClick={() => handleSubscribe("green")}
+                    onClick={() => handleSubscribe("Silver")}
                     className="btn btn-success btn-block">
                     Subscribe Now
                   </button>
