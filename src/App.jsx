@@ -9,6 +9,10 @@ import Connection from "./components/Connection.jsx";
 import Request from "./components/Request.jsx";
 import Signup from "./components/Signup.jsx";
 import Payment from "./components/Payment.jsx";
+import LandingPage from "./components/landing/LandingPage.jsx";
+import Home from "./components/Home.jsx";
+import Blog from "./components/Blog.jsx";
+import Chat from "./components/chat.jsx";
 
 function App() {
   return (
@@ -16,14 +20,18 @@ function App() {
       <Provider store={appStore}>
         <BrowserRouter>
           <Routes>
+            <Route path="/landing" element={<LandingPage />} />
             <Route path="/" element={<Body />}>
-              <Route path="/" element={<Feed />} />
+              <Route path="/" element={<Home />} />
+              <Route path="/feed" element={<Feed />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/profile" element={<Profile />} />
               <Route path="/connections" element={<Connection />} />
               <Route path="/requests" element={<Request />} />
+              <Route path="/blogs" element={<Blog />} />
               <Route path="/payment" element={<Payment />} />
+              <Route path="/chat/:_id" element={<Chat />} />
             </Route>
           </Routes>
         </BrowserRouter>

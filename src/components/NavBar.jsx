@@ -1,17 +1,35 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { BASE_URL } from "../utils/constants";
 import { removeUser } from "../utils/userSlice";
+import {
+  Code2,
+  Compass,
+  Users,
+  UserPlus,
+  Crown,
+  LogOut,
+  User,
+  Sun,
+  Moon,
+  ChevronDown,
+  Sparkles,
+  Menu,
+  X,
+} from "lucide-react";
 
 const NavBar = () => {
   const [them, setTheme] = useState(() => {
-    return localStorage.getItem("theme") || "light";
+    return localStorage.getItem("theme") || "dark";
   });
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navigate = useNavigate();
+  const location = useLocation();
   const user = useSelector((store) => store.user);
+  const requests = useSelector((store) => store.request);
   const dispatch = useDispatch();
 
   const Logouthandler = async () => {
@@ -21,12 +39,14 @@ const NavBar = () => {
         url: BASE_URL + "/logout",
         withCredentials: true,
       });
-      if (res.data === "User Successfully Logout") {
+      if (res.data === "User Successfully Logout" || res.status === 200) {
         dispatch(removeUser());
         navigate("/login");
       }
     } catch (error) {
       console.log(error);
+      dispatch(removeUser());
+      navigate("/login");
     }
   };
 
@@ -35,76 +55,209 @@ const NavBar = () => {
     localStorage.setItem("theme", them);
   }, [them]);
 
-  const toggleThem = (e) => {
-    setTheme(e.target.checked ? "dark" : "light");
+  const toggleThem = () => {
+    setTheme(them === "dark" ? "light" : "dark");
   };
 
-  return (
-    <div className="navbar bg-base-300 shadow-sm">
-      <div className="flex-1">
-        <Link to="/" className="btn btn-ghost text-xl">
-          DevTinder
-        </Link>
-      </div>
-      {user && (
-        <div className="flex gap-2">
-          <div className="my-1.5">Welcome, {user.firstName}</div>
-          <div className="dropdown dropdown-end mx-4 ">
-            <div
-              tabIndex={0}
-              role="button"
-              className="btn btn-ghost btn-circle avatar">
-              <div className="w-10 rounded-full">
-                <img alt="Tailwind CSS Navbar component" src={user.photoUrl} />
-              </div>
-            </div>
-            <ul
-              tabIndex="-1"
-              className="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-              <li>
-                <Link to="/profile" className="justify-between">
-                  Profile
-                </Link>
-              </li>
-              <li>
-                <Link to="/connections">Connections</Link>
-              </li>
-              <li>
-                <Link to="/requests">Requests</Link>
-              </li>
-              <li>
-                <Link to="/payment">Payments</Link>
-              </li>
-              <li>
-                <Link onClick={Logouthandler}>Logout</Link>
-              </li>
-            </ul>
-          </div>
-        </div>
-      )}
-      <label className="swap swap-rotate">
-        <input
-          type="checkbox"
-          className="theme-controller"
-          checked={them === "dark"}
-          onChange={toggleThem}
-        />
-        <svg
-          className="swap-off h-10 w-10 fill-current"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24">
-          <path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z" />
-        </svg>
+  const navItems = [
+    { label: "Discovery Feed", path: "/feed", icon: Compass },
+    { label: "Connections", path: "/connections", icon: Users },
+    {
+      label: "Requests",
+      path: "/requests",
+      icon: UserPlus,
+      badge: requests?.length > 0 ? requests.length : null,
+    },
+    { label: "Gold VIP", path: "/payment", icon: Crown, highlight: true },
+  ];
 
-        {/* moon icon */}
-        <svg
-          className="swap-on h-10 w-10 fill-current"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24">
-          <path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z" />
-        </svg>
-      </label>
-    </div>
+  return (
+    <header className="sticky top-0 z-50 bg-[#060a1f]/90 backdrop-blur-xl border-b border-white/10 shadow-xl">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
+          
+          {/* Left Brand Logo */}
+          <div className="flex items-center gap-6">
+            <Link
+              to={user ? "/feed" : "/"}
+              className="flex items-center gap-2.5 group"
+            >
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-pink-500 via-purple-600 to-cyan-500 p-[1.5px] shadow-lg shadow-pink-500/20 group-hover:scale-105 transition-transform flex items-center justify-center">
+                <div className="w-full h-full bg-[#080c1d] rounded-[10px] flex items-center justify-center">
+                  <Code2 className="w-5 h-5 text-pink-400" />
+                </div>
+              </div>
+              <span className="font-extrabold text-xl tracking-tight text-white">
+                Dev<span className="text-pink-500">Tinder</span>
+              </span>
+            </Link>
+
+            {/* In-App Route Tabs (when logged in) */}
+            {user && (
+              <nav className="hidden md:flex items-center gap-1 bg-black/40 p-1 rounded-2xl border border-white/10">
+                {navItems.map((item) => {
+                  const Icon = item.icon;
+                  const isActive = location.pathname === item.path;
+                  return (
+                    <Link
+                      key={item.path}
+                      to={item.path}
+                      className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-mono font-bold transition-all ${
+                        isActive
+                          ? "bg-pink-500/20 text-pink-300 border border-pink-500/40 shadow-sm"
+                          : item.highlight
+                          ? "text-amber-300 hover:bg-amber-500/10"
+                          : "text-slate-300 hover:text-white hover:bg-white/5"
+                      }`}
+                    >
+                      <Icon className={`w-4 h-4 ${item.highlight ? "text-amber-400" : ""}`} />
+                      <span>{item.label}</span>
+                      {item.badge && (
+                        <span className="px-1.5 py-0.2 rounded-full bg-pink-500 text-white text-[10px] font-black">
+                          {item.badge}
+                        </span>
+                      )}
+                    </Link>
+                  );
+                })}
+              </nav>
+            )}
+          </div>
+
+          {/* Right Action Bar & User Profile */}
+          <div className="flex items-center gap-3">
+            
+            {/* Theme Toggle Button */}
+            <button
+              type="button"
+              onClick={toggleThem}
+              className="p-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-slate-300 hover:text-white transition-all hidden sm:block"
+              title="Toggle Theme"
+            >
+              {them === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
+            
+            {user && (
+              <button
+                type="button"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="md:hidden p-2 rounded-xl bg-white/5 border border-white/10 text-slate-300"
+              >
+                {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </button>
+            )}
+
+            {user ? (
+              <div className="dropdown dropdown-end">
+                <div
+                  tabIndex={0}
+                  role="button"
+                  className="flex items-center gap-2 p-1.5 pr-3 rounded-2xl bg-white/5 hover:bg-white/10 border border-white/10 transition-all cursor-pointer"
+                >
+                  <div className="relative w-8 h-8 rounded-xl overflow-hidden ring-1 ring-pink-500/50">
+                    <img
+                      src={user.photoUrl || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80"}
+                      alt={user.firstName}
+                      className="w-full h-full object-cover"
+                    />
+                    <span className="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 ring-1 ring-black" />
+                  </div>
+                  <div className="hidden sm:block text-left">
+                    <div className="text-xs font-bold text-white leading-tight">
+                      {user.firstName} {user.lastName}
+                    </div>
+                    <div className="text-[10px] font-mono text-pink-400">
+                      Verified Dev
+                    </div>
+                  </div>
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+                </div>
+
+                <ul
+                  tabIndex="-1"
+                  className="menu dropdown-content z-50 mt-3 w-56 p-2 rounded-2xl glass-panel-glow border border-white/15 shadow-2xl space-y-1 font-mono text-xs text-slate-200"
+                >
+                  <li className="px-3 py-2 border-b border-white/10 text-[11px] text-slate-400 font-sans">
+                    Signed in as <br />
+                    <span className="font-mono text-white font-bold">{user.emailId || user.firstName}</span>
+                  </li>
+                  <li>
+                    <Link to="/profile" className="flex items-center gap-2 py-2 rounded-xl hover:bg-white/10 hover:text-white">
+                      <User className="w-4 h-4 text-pink-400" />
+                      <span>Edit Profile</span>
+                    </Link>
+                  </li>
+
+                  <li>
+                    <Link to="/payment" className="flex items-center gap-2 py-2 rounded-xl hover:bg-white/10 hover:text-amber-300">
+                      <Crown className="w-4 h-4 text-amber-400" />
+                      <span>DevTinder Gold VIP</span>
+                    </Link>
+                  </li>
+                  <li className="pt-1 border-t border-white/10">
+                    <button
+                      type="button"
+                      onClick={Logouthandler}
+                      className="flex items-center gap-2 py-2 rounded-xl text-rose-300 hover:bg-rose-500/20 w-full text-left"
+                    >
+                      <LogOut className="w-4 h-4" />
+                      <span>Sign Out</span>
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link
+                  to="/login"
+                  className="px-4 py-2 rounded-xl text-xs font-mono font-bold text-slate-200 hover:text-white hover:bg-white/5 transition-all"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  to="/signup"
+                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-400 hover:to-purple-500 text-white text-xs font-mono font-bold shadow-md shadow-pink-500/25 transition-all"
+                >
+                  Sign Up
+                </Link>
+              </div>
+            )}
+
+          </div>
+
+        </div>
+        
+        {/* Mobile Nav Menu */}
+        {user && mobileMenuOpen && (
+          <div className="md:hidden mt-3 p-4 rounded-2xl glass-panel-glow border border-white/15 space-y-2 shadow-2xl animate-fade-in mb-3">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = location.pathname === item.path;
+              return (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-mono font-bold transition-all ${
+                    isActive
+                      ? "bg-pink-500/20 text-pink-300 border border-pink-500/40"
+                      : "text-slate-300 hover:bg-white/10 hover:text-white"
+                  }`}
+                >
+                  <Icon className={`w-5 h-5 ${item.highlight ? "text-amber-400" : ""}`} />
+                  <span>{item.label}</span>
+                  {item.badge && (
+                    <span className="ml-auto px-2 py-0.5 rounded-full bg-pink-500 text-white text-[10px] font-black">
+                      {item.badge}
+                    </span>
+                  )}
+                </Link>
+              );
+            })}
+          </div>
+        )}
+      </div>
+    </header>
   );
 };
 
