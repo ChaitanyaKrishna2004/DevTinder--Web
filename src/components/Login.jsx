@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
 import { BASE_URL } from "../utils/constants";
 import {
   Code2,
@@ -15,14 +15,27 @@ import {
   AlertCircle,
   Zap,
 } from "lucide-react";
-import { GithubIcon, GoogleIcon } from "./landing/DevIcons";
+import { GoogleIcon } from "./landing/DevIcons";
+import GithubAuthButton from "./GithubAuthButton";
+
+// The backend redirects to /login?error=<reason> when GitHub sign-in fails
+const GITHUB_ERRORS = {
+  github_denied: "GitHub sign-in was cancelled.",
+  github_state: "GitHub sign-in expired. Please try again.",
+  github_no_email:
+    "Your GitHub account has no verified email. Add one on GitHub and try again.",
+  github_failed: "GitHub sign-in failed. Please try again.",
+};
 
 const Login = () => {
+  const [searchParams] = useSearchParams();
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(
+    () => GITHUB_ERRORS[searchParams.get("error")] || null,
+  );
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -210,14 +223,7 @@ const Login = () => {
               <GoogleIcon className="w-4 h-4 text-rose-400" />
               <span>Google</span>
             </button>
-            <button
-              type="button"
-              onClick={fillDemoCredentials}
-              className="py-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-mono flex items-center justify-center gap-2 transition-all cursor-pointer"
-            >
-              <GithubIcon className="w-4 h-4" />
-              <span>GitHub</span>
-            </button>
+            <GithubAuthButton />
           </div>
 
           {/* Footer Link */}

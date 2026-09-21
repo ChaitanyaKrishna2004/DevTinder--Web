@@ -15,10 +15,12 @@ import {
   Compass,
 } from "lucide-react";
 import { GithubIcon } from "./landing/DevIcons";
+import { syncOnlineConnections } from "../utils/socket";
 
 const Connection = () => {
   const dispatch = useDispatch();
   const connections = useSelector((store) => store.connection) || [];
+  const onlineUsers = useSelector((store) => store.presence);
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -31,6 +33,8 @@ const Connection = () => {
         withCredentials: true,
       });
       dispatch(addConnection(res?.data));
+      // Newly accepted connections may not be in the online list yet
+      syncOnlineConnections(dispatch);
     } catch (error) {
       console.log(error);
     } finally {
@@ -102,6 +106,7 @@ const Connection = () => {
                 skills && skills.length > 0
                   ? skills
                   : ["TypeScript", "React", "Node.js", "Docker"];
+              const isOnline = onlineUsers.includes(_id);
 
               return (
                 <div
@@ -119,7 +124,12 @@ const Connection = () => {
                             "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=300&auto=format&fit=crop&q=80"
                           }
                         />
-                        <span className="absolute bottom-1 right-1 w-3 h-3 rounded-full bg-emerald-400 ring-2 ring-black" />
+                        <span
+                          title={isOnline ? "Online" : "Offline"}
+                          className={`absolute bottom-1 right-1 w-3 h-3 rounded-full ring-2 ring-black ${
+                            isOnline ? "bg-emerald-400" : "bg-slate-500"
+                          }`}
+                        />
                       </div>
 
                       <div className="min-w-0">

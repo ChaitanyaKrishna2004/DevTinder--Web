@@ -4,6 +4,7 @@ import { BASE_URL } from "../utils/constants";
 import { Link, useNavigate } from "react-router";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import GithubAuthButton from "./GithubAuthButton";
 import {
   Code2,
   Lock,
@@ -23,7 +24,9 @@ const Signup = () => {
   const [lastName, setLastName] = useState("");
   const [emailId, setEmailId] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
@@ -34,13 +37,18 @@ const Signup = () => {
   const handleSignup = async (e) => {
     if (e) e.preventDefault();
 
-    if (!firstName || !lastName || !emailId || !password) {
+    if (!firstName || !lastName || !emailId || !password || !confirmPassword) {
       setErrorMsg("All fields are required.");
       return;
     }
 
     if (firstName.trim().length < 4) {
       setErrorMsg("First name must be at least 4 characters long.");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setErrorMsg("Passwords do not match.");
       return;
     }
 
@@ -239,6 +247,54 @@ const Signup = () => {
               </div>
             </div>
 
+            {/* Confirm Password Field */}
+            <div>
+              <label className="block text-xs font-mono font-bold text-slate-300 mb-1.5">
+                Confirm Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                <input
+                  type={showConfirmPassword ? "text" : "password"}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="Re-enter your password"
+                  autoComplete="new-password"
+                  className={`w-full pl-10 pr-10 py-3 rounded-xl bg-black/40 border text-white placeholder-slate-600 text-xs font-mono outline-none ${
+                    confirmPassword && confirmPassword !== password
+                      ? "border-rose-500/60 focus:border-rose-500/80"
+                      : "border-white/10 focus:border-pink-500/60"
+                  }`}
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 cursor-pointer"
+                >
+                  {showConfirmPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
+
+              {/* Live match hint once the user starts typing */}
+              {confirmPassword &&
+                (confirmPassword === password ? (
+                  <p className="mt-1.5 flex items-center gap-1.5 text-[11px] font-mono text-emerald-400">
+                    <CheckCircle2 className="w-3.5 h-3.5" />
+                    Passwords match
+                  </p>
+                ) : (
+                  <p className="mt-1.5 flex items-center gap-1.5 text-[11px] font-mono text-rose-400">
+                    <AlertCircle className="w-3.5 h-3.5" />
+                    Passwords don't match
+                  </p>
+                ))}
+            </div>
+
             {/* Submit Button */}
             <button
               type="submit"
@@ -256,6 +312,16 @@ const Signup = () => {
             </button>
 
           </form>
+
+          {/* GitHub Sign Up */}
+          <div className="flex items-center gap-3 my-6">
+            <div className="flex-1 h-px bg-white/10" />
+            <span className="text-[10px] font-mono text-slate-500 uppercase">
+              or
+            </span>
+            <div className="flex-1 h-px bg-white/10" />
+          </div>
+          <GithubAuthButton label="Sign up with GitHub" className="w-full py-3" />
 
           {/* Footer Link */}
           <div className="mt-8 text-center text-xs text-slate-400 font-mono">

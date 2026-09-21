@@ -173,32 +173,43 @@ const NavBar = () => {
                   <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
                 </div>
 
+                {/* Solid background: blur can't see through the already-blurred header */}
                 <ul
                   tabIndex="-1"
-                  className="menu dropdown-content z-50 mt-3 w-56 p-2 rounded-2xl glass-panel-glow border border-white/15 shadow-2xl space-y-1 font-mono text-xs text-slate-200"
+                  className="dropdown-content z-50 mt-2 w-64 p-1.5 rounded-2xl bg-[#0b1029] border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.6)] text-xs"
                 >
-                  <li className="px-3 py-2 border-b border-white/10 text-[11px] text-slate-400 font-sans">
-                    Signed in as <br />
-                    <span className="font-mono text-white font-bold">{user.emailId || user.firstName}</span>
+                  <li className="px-3 pt-2.5 pb-3 mb-1.5 border-b border-white/10">
+                    <p className="text-[11px] text-slate-400">Signed in as</p>
+                    <p
+                      className="mt-0.5 font-mono font-bold text-white truncate"
+                      title={user.emailId}
+                    >
+                      {user.emailId || user.firstName}
+                    </p>
                   </li>
                   <li>
-                    <Link to="/profile" className="flex items-center gap-2 py-2 rounded-xl hover:bg-white/10 hover:text-white">
+                    <Link
+                      to="/profile"
+                      className="flex items-center gap-2.5 px-3 py-2 rounded-xl font-mono text-slate-200 hover:bg-white/5 hover:text-white transition-colors"
+                    >
                       <User className="w-4 h-4 text-pink-400" />
                       <span>Edit Profile</span>
                     </Link>
                   </li>
-
                   <li>
-                    <Link to="/payment" className="flex items-center gap-2 py-2 rounded-xl hover:bg-white/10 hover:text-amber-300">
+                    <Link
+                      to="/payment"
+                      className="flex items-center gap-2.5 px-3 py-2 rounded-xl font-mono text-slate-200 hover:bg-amber-500/10 hover:text-amber-300 transition-colors"
+                    >
                       <Crown className="w-4 h-4 text-amber-400" />
                       <span>DevTinder Gold VIP</span>
                     </Link>
                   </li>
-                  <li className="pt-1 border-t border-white/10">
+                  <li className="mt-1.5 pt-1.5 border-t border-white/10">
                     <button
                       type="button"
                       onClick={Logouthandler}
-                      className="flex items-center gap-2 py-2 rounded-xl text-rose-300 hover:bg-rose-500/20 w-full text-left"
+                      className="flex w-full items-center gap-2.5 px-3 py-2 rounded-xl font-mono text-rose-300 hover:bg-rose-500/10 hover:text-rose-200 transition-colors text-left"
                     >
                       <LogOut className="w-4 h-4" />
                       <span>Sign Out</span>

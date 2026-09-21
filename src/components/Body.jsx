@@ -6,6 +6,8 @@ import axios from 'axios'
 import { BASE_URL } from '../utils/constants.js'
 import { useDispatch, useSelector } from 'react-redux'
 import { addUser } from '../utils/userSlice.js'
+import { setOnlineUsers, setUserOnline } from '../utils/presenceSlice.js'
+import { disconnectSocket, getSocket, syncOnlineConnections } from '../utils/socket.js'
 
 const Body = () => {
   const dispatch = useDispatch();
@@ -51,6 +53,31 @@ const Body = () => {
       fetchUser();
     }
   }, [location.pathname]);
+
+  const userId = user?._id;
+
+  // One socket for the whole logged-in session keeps online status live everywhere
+  useEffect(() => {
+    if (!userId) return;
+    const socket = getSocket();
+
+    const handleConnect = () => syncOnlineConnections(dispatch);
+    const handlePresence = (update) => dispatch(setUserOnline(update));
+    const handleDisconnect = () => dispatch(setOnlineUsers([]));
+
+    if (socket.connected) handleConnect();
+    socket.on('connect', handleConnect);
+    socket.on('presence', handlePresence);
+    socket.on('disconnect', handleDisconnect);
+
+    return () => {
+      socket.off('connect', handleConnect);
+      socket.off('presence', handlePresence);
+      socket.off('disconnect', handleDisconnect);
+      disconnectSocket();
+      dispatch(setOnlineUsers([]));
+    };
+  }, [userId, dispatch]);
 
   const isLanding = location.pathname === '/landing' || (location.pathname === '/' && !user);
 
